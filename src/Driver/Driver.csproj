@@ -7,4 +7,15 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Lexer\Lexer.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\CodeSample.wac" />
+      <EmbeddedResource Include="Resources\CodeSample.wac">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

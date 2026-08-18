@@ -68,10 +68,10 @@ WhatACompiler/
 
 | Stage             | Description                        | Status     |
 |-------------------|------------------------------------|------------|
-| Lexer             | Tokenizer implementation           | ☐ Planned |
-| Parser            | AST construction                   | ☐ Planned |
-| Semantic analysis | Type checking and scope resolution | ☐ Planned |
-| Code generation   | Producing target code              | ☐ Planned |
+| Lexer             | Tokenizer implementation           | [x] Planned |
+| Parser            | AST construction                   | [] Planned |
+| Semantic analysis | Type checking and scope resolution | [] Planned |
+| Code generation   | Producing target code              | [] Planned |
 
 ## License
 

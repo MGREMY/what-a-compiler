@@ -1,0 +1,37 @@
+// ===== MAXIMAL LEXER TEST =====
+/* Multi-line comment spanning
+   multiple lines with special chars: = + > < ! */
+// Single-line comment
+/* /* Nested comment test (behavior: inner /* ends at first */
+int          // type keyword
+main(        // identifier + parens
+)            // closing paren
+{            // opening brace
+    
+    // Variable declarations
+    int   x       = 42;       // int literal
+    float y       = 3.14;     // float literal (has '.')
+    char  c       = 'A';      // char literal
+    string  s       = "hello"; // string literal
+    
+    // Arithmetic expression
+    int result = x + y * 2 - 10 / 3; // mixed operators
+    
+    // Comparison operators
+    if (result > 100) {        // > and {
+        // Nested block
+        float z = 1.5e2;       // float with exponent (1.5e2 → detected as FloatLiteral)
+    } else if (result == 42) { // == (ensure you've fixed the _pos bug)
+        c = 'B';
+    } else {                   // != if present, or just else
+        s = "world";
+    }
+    
+    // Loop-like pattern (while not yet in grammar, but identifiers/operators test)
+    while (x > 0) {
+        x = x - 1;
+    }
+    
+    // Return statement
+    return result + c + s;
+} // end of main

@@ -2,9 +2,17 @@
 
 public static class Driver
 {
-    public static int Main(string[] arg)
+    public static int Main()
     {
-        Console.WriteLine("Hello World !");
+        var sourceCode = File.ReadAllText("Resources/CodeSample.wac");
+        var lexer = new Lexer.Lexer(sourceCode);
+
+        var tokens = lexer.Tokenize();
+
+        foreach (var token in tokens)
+        {
+            Console.WriteLine(token);
+        }
 
         return 0;
     }
