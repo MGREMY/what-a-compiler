@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Driver/Driver.csproj" />
-    <Project Path="src/Lexer/Lexer.csproj" />
+    <Project Path="src\WacLexer\WacLexer.csproj" />
   </Folder>
 </Solution>

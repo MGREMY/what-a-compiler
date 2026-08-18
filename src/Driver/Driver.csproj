@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Lexer\Lexer.csproj" />
+      <ProjectReference Include="..\WacLexer\WacLexer.csproj" />
     </ItemGroup>
 
     <ItemGroup>

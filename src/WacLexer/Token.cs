@@ -1,4 +1,4 @@
-namespace Lexer;
+namespace WacLexer;
 
 #pragma warning disable format // @formatter:off
 public enum TokenKind
@@ -11,6 +11,7 @@ public enum TokenKind
     Equal, Not, SemiColon, Comma,
     LeftParenthesis, RightParenthesis, LeftBracket, RightBracket, LeftBrace, RightBrace,
     Eof,
+    InvalidToken, // Special token
 }
 #pragma warning restore format // @formatter:on
 
