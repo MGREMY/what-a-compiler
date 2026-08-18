@@ -9,10 +9,11 @@ main(        // identifier + parens
 {            // opening brace
     
     // Variable declarations
-    int   x       = 42;       // int literal
-    float y       = 3.14;     // float literal (has '.')
-    char  c       = 'A';      // char literal
-    string  s       = "hello"; // string literal
+    int     x             = 42;       // int literal
+    float   y             = 3.14;     // float literal (has '.')
+    char    c             = 'A';      // char literal
+    char    escapedChar   = '\n';     // Escaped literal
+    string  s           = "hello";    // string literal
     
     // Arithmetic expression
     int result = x + y * 2 - 10 / 3; // mixed operators

@@ -1,6 +1,6 @@
 namespace WacLexer;
 
-public struct LexerState
+internal struct LexerState
 {
     public int Position;
     public int Line;

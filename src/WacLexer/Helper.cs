@@ -1,6 +1,6 @@
 namespace WacLexer;
 
-public static class Helper
+internal static class Helper
 {
     /// <summary>
     /// Get the next character without moving the current position.
@@ -11,5 +11,10 @@ public static class Helper
     public static char Peek(string source, int position)
     {
         return position < source.Length - 1 ? source[position + 1] : '\0';
+    }
+
+    public static bool IsEscape(char c)
+    {
+        return c == '\\';
     }
 }

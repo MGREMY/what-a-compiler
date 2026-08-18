@@ -1,22 +1,28 @@
 namespace WacLexer.Tokenizer;
 
-public static class LetterTokenizer
+internal class LetterTokenizer : ITokenizer
 {
-    public static Token Tokenize(string source, ref LexerState state)
+    public bool CanTokenize(string source, ref LexerState state)
+    {
+        return char.IsLetter(source[state.Position]) ||
+               source[state.Position] == '_';
+    }
+
+    public Token Tokenize(string source, ref LexerState state)
     {
         var start = state.Position;
-        var next = Helper.Peek(source, state.Position);
+        var position = state.Position;
+        var current = source[state.Position];
 
-        while (char.IsLetter(next) ||
-               next == '_')
+        while (position < source.Length &&
+               char.IsLetter(current) ||
+               current == '_')
         {
-            next = Helper.Peek(source, state.Position);
-            state.Position++;
+            position++;
+            current = source[position];
         }
 
-        state.Position++;
-
-        var word = source.Substring(start, state.Position - start);
+        var word = source.Substring(start, position - start);
         var kind = word switch
         {
             "if" => TokenKind.If,
@@ -30,8 +36,11 @@ public static class LetterTokenizer
             _ => TokenKind.Id,
         };
 
+        var token = new Token(kind, new TokenPosition(state.Line, state.Column), word);
+
+        state.Position = position;
         state.Column += word.Length;
 
-        return new Token(kind, new TokenPosition(state.Line, state.Column), word);
+        return token;
     }
 }

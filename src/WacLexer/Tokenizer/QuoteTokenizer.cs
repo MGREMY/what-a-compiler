@@ -1,24 +1,56 @@
 namespace WacLexer.Tokenizer;
 
-public static class QuoteTokenizer
+internal class QuoteTokenizer : ITokenizer
 {
-    public static Token Tokenize(string source, ref LexerState state)
+    public bool CanTokenize(string source, ref LexerState state)
+    {
+        return source[state.Position] == '\'';
+    }
+
+    public Token Tokenize(string source, ref LexerState state)
     {
         var start = state.Position;
-        var next = Helper.Peek(source, state.Position);
+        var position = state.Position;
+        var current = source[state.Position];
+        var count = 0;
 
-        while (next != '\'')
+        while (position < source.Length &&
+               count < 2)
         {
-            next = Helper.Peek(source, state.Position);
-            state.Position++;
+            if (current == '\'') count++;
+            if (Helper.IsEscape(current)) position++;
+
+            position++;
+            current = source[position];
         }
 
-        state.Position += 2;
+        Token? token = null;
+        var word = source.Substring(start, position - start);
 
-        var word = source.Substring(start, state.Position - start);
+        if (word.Length > 2 && Helper.IsEscape(word[1]))
+        {
+            if (word is @"'\\'" or @"'\n'" or @"'\t'" or @"'\''")
+            {
+                token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column),
+                    word);
+            }
+            else
+            {
+                token = new Token(TokenKind.InvalidToken, new TokenPosition(state.Line, state.Column),
+                    "Invalid char definition");
+            }
+        }
+        else if (word.Length != 3)
+        {
+            token = new Token(TokenKind.InvalidToken, new TokenPosition(state.Line, state.Column),
+                "Invalid char definition");
+        }
 
+        token ??= new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column), word);
+
+        state.Position = position;
         state.Column += word.Length;
 
-        return new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column), word);
+        return token.Value;
     }
 }

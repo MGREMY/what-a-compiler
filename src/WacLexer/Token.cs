@@ -47,6 +47,6 @@ public struct Token
 
     public override string ToString()
     {
-        return $"Token: {{ Kind: {Kind}; Position: {Position}; Text: '{Text}' }}";
+        return $"Token: {{ Kind: {Kind}; Position: {Position}; Text: {Text} }}";
     }
 }

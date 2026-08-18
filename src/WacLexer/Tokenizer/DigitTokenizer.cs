@@ -1,28 +1,35 @@
 namespace WacLexer.Tokenizer;
 
-public static class DigitTokenizer
+internal class DigitTokenizer : ITokenizer
 {
-    public static Token Tokenize(string source, ref LexerState state)
+    public bool CanTokenize(string source, ref LexerState state)
+    {
+        return char.IsDigit(source[state.Position]);
+    }
+
+    public Token Tokenize(string source, ref LexerState state)
     {
         var start = state.Position;
-        var next = Helper.Peek(source, state.Position);
+        var position = state.Position;
+        var current = source[state.Position];
 
-        while (char.IsDigit(next) ||
-               next == '.' ||
-               next == 'e')
+        while (position < source.Length &&
+               char.IsDigit(current) ||
+               current is '.' or 'e')
         {
-            next = Helper.Peek(source, state.Position);
-            state.Position++;
+            position++;
+            current = source[position];
         }
 
-        state.Position++;
+        var word = source.Substring(start, position - start);
 
-        var word = source.Substring(start, state.Position - start);
-
-        state.Position += word.Length;
-
-        return word.Contains('.')
+        var token = word.Contains('.')
             ? new Token(TokenKind.FloatLiteral, new TokenPosition(state.Line, state.Column), word)
             : new Token(TokenKind.IntLiteral, new TokenPosition(state.Line, state.Column), word);
+
+        state.Position = position;
+        state.Column += word.Length;
+
+        return token;
     }
 }
