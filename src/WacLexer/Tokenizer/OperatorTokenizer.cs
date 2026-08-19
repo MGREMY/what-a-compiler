@@ -1,3 +1,5 @@
+using WacLexer.Exception;
+
 namespace WacLexer.Tokenizer;
 
 internal class OperatorTokenizer : ITokenizer
@@ -159,11 +161,8 @@ internal class OperatorTokenizer : ITokenizer
             }
             default:
             {
-                token = new Token(TokenKind.InvalidToken, new TokenPosition(state.Line, state.Column),
+                throw new UnknownTokenException(new TokenPosition(state.Line, state.Column),
                     source[state.Position].ToString());
-                state.Position++;
-                state.Column++;
-                break;
             }
         }
 

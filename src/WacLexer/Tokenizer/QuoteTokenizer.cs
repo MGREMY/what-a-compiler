@@ -1,3 +1,5 @@
+using WacLexer.Exception;
+
 namespace WacLexer.Tokenizer;
 
 internal class QuoteTokenizer : ITokenizer
@@ -29,21 +31,15 @@ internal class QuoteTokenizer : ITokenizer
 
         if (word.Length > 2 && Helper.IsEscape(word[1]))
         {
-            if (word is @"'\\'" or @"'\n'" or @"'\t'" or @"'\''")
-            {
-                token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column),
-                    word);
-            }
-            else
-            {
-                token = new Token(TokenKind.InvalidToken, new TokenPosition(state.Line, state.Column),
-                    "Invalid char definition");
-            }
+            if (word is not (@"'\\'" or @"'\n'" or @"'\t'" or @"'\''"))
+                throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+
+            token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column),
+                word);
         }
         else if (word.Length != 3)
         {
-            token = new Token(TokenKind.InvalidToken, new TokenPosition(state.Line, state.Column),
-                "Invalid char definition");
+            throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
         }
         else
         {

@@ -11,7 +11,6 @@ public enum TokenKind
     Equal, Not, SemiColon, Comma,
     LeftParenthesis, RightParenthesis, LeftBracket, RightBracket, LeftBrace, RightBrace,
     Eof,
-    InvalidToken, // Special token
 }
 #pragma warning restore format // @formatter:on
 

@@ -1,3 +1,5 @@
+using WacLexer.Exception;
+
 namespace WacLexer.Tokenizer;
 
 internal class DigitTokenizer : ITokenizer
@@ -28,9 +30,9 @@ internal class DigitTokenizer : ITokenizer
         {
             var count = word.Count(x => x == '.');
 
-            token = count > 1
-                ? new Token(TokenKind.InvalidToken, new TokenPosition(state.Line, state.Column), word)
-                : new Token(TokenKind.FloatLiteral, new TokenPosition(state.Line, state.Column), word);
+            if (count > 1) throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+
+            token = new Token(TokenKind.FloatLiteral, new TokenPosition(state.Line, state.Column), word);
         }
         else
         {
