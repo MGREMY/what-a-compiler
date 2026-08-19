@@ -42,6 +42,7 @@ public class Driver
     }
 }
 
+[MinColumn, MaxColumn, MemoryDiagnoser]
 public class DriverBenchmark
 {
     [Benchmark]

@@ -24,7 +24,7 @@ internal class QuoteTokenizer : ITokenizer
             current = source[position];
         }
 
-        Token? token = null;
+        Token token;
         var word = source.Substring(start, position - start);
 
         if (word.Length > 2 && Helper.IsEscape(word[1]))
@@ -45,12 +45,14 @@ internal class QuoteTokenizer : ITokenizer
             token = new Token(TokenKind.InvalidToken, new TokenPosition(state.Line, state.Column),
                 "Invalid char definition");
         }
-
-        token ??= new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column), word);
+        else
+        {
+            token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column), word);
+        }
 
         state.Position = position;
         state.Column += word.Length;
 
-        return token.Value;
+        return token;
     }
 }

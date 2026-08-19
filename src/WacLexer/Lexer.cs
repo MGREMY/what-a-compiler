@@ -4,11 +4,11 @@ namespace WacLexer;
 
 public class Lexer
 {
-    private readonly ITokenizer _digitTokenizer = new DigitTokenizer();
-    private readonly ITokenizer _letterTokenizer = new LetterTokenizer();
-    private readonly ITokenizer _doubleQuoteTokenizer = new DoubleQuoteTokenizer();
-    private readonly ITokenizer _quoteTokenizer = new QuoteTokenizer();
-    private readonly ITokenizer _operatorTokenizer = new OperatorTokenizer();
+    private readonly DigitTokenizer _digitTokenizer = new();
+    private readonly LetterTokenizer _letterTokenizer = new();
+    private readonly DoubleQuoteTokenizer _doubleQuoteTokenizer = new();
+    private readonly QuoteTokenizer _quoteTokenizer = new();
+    private readonly OperatorTokenizer _operatorTokenizer = new();
 
     public IEnumerable<Token> Tokenize(string source)
     {
@@ -20,7 +20,7 @@ public class Lexer
             if (char.IsWhiteSpace(source[state.Position]))
             {
                 // If return line, increment line and reset col
-                if (source[state.Position].Equals('\n'))
+                if (source[state.Position] == '\n')
                 {
                     state.Line++;
                     state.Column = 1;
@@ -92,40 +92,33 @@ public class Lexer
                 }
             }
 
-            Token token;
-
             if (_letterTokenizer.CanTokenize(source, ref state))
             {
-                token = _letterTokenizer.Tokenize(source, ref state);
-                yield return token;
+                yield return _letterTokenizer.Tokenize(source, ref state);
                 continue;
             }
 
             if (_digitTokenizer.CanTokenize(source, ref state))
             {
-                token = _digitTokenizer.Tokenize(source, ref state);
-                yield return token;
+                yield return _digitTokenizer.Tokenize(source, ref state);
                 continue;
             }
 
             if (_doubleQuoteTokenizer.CanTokenize(source, ref state))
             {
-                token = _doubleQuoteTokenizer.Tokenize(source, ref state);
-                yield return token;
+                yield return _doubleQuoteTokenizer.Tokenize(source, ref state);
                 continue;
             }
 
             if (_quoteTokenizer.CanTokenize(source, ref state))
             {
-                token = _quoteTokenizer.Tokenize(source, ref state);
-                yield return token;
+                yield return _quoteTokenizer.Tokenize(source, ref state);
                 continue;
             }
 
             if (_operatorTokenizer.CanTokenize(source, ref state))
             {
-                token = _operatorTokenizer.Tokenize(source, ref state);
-                yield return token;
+                yield return _operatorTokenizer.Tokenize(source, ref state);
                 continue;
             }
         }
