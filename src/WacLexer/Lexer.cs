@@ -1,15 +1,9 @@
-using WacLexer.Tokenizer;
+using WacLexer.Exception;
 
 namespace WacLexer;
 
 public class Lexer
 {
-    private readonly DigitTokenizer _digitTokenizer = new();
-    private readonly LetterTokenizer _letterTokenizer = new();
-    private readonly DoubleQuoteTokenizer _doubleQuoteTokenizer = new();
-    private readonly QuoteTokenizer _quoteTokenizer = new();
-    private readonly OperatorTokenizer _operatorTokenizer = new();
-
     public IEnumerable<Token> Tokenize(string source)
     {
         var state = new LexerState(0, 1, 1);
@@ -92,33 +86,317 @@ public class Lexer
                 }
             }
 
-            if (_letterTokenizer.CanTokenize(source, ref state))
+            // Letter Tokenizer
+            if (char.IsLetter(source[state.Position]) ||
+                source[state.Position] == '_')
             {
-                yield return _letterTokenizer.Tokenize(source, ref state);
+                var start = state.Position;
+                var position = state.Position;
+                var current = source[state.Position];
+
+                while (position < source.Length &&
+                       char.IsLetter(current) ||
+                       current == '_')
+                {
+                    position++;
+                    current = source[position];
+                }
+
+                var word = source.Substring(start, position - start);
+                var kind = word switch
+                {
+                    "if" => TokenKind.If,
+                    "else" => TokenKind.Else,
+                    "return" => TokenKind.Return,
+                    "void" => TokenKind.Void,
+                    "int" => TokenKind.Int,
+                    "float" => TokenKind.Float,
+                    "string" => TokenKind.String,
+                    "char" => TokenKind.Char,
+                    _ => TokenKind.Id,
+                };
+
+                var token = new Token(kind, new TokenPosition(state.Line, state.Column), word);
+
+                state.Position = position;
+                state.Column += word.Length;
+
+                yield return token;
                 continue;
             }
 
-            if (_digitTokenizer.CanTokenize(source, ref state))
+            // Digit Tokenizer
+            if (char.IsDigit(source[state.Position]))
             {
-                yield return _digitTokenizer.Tokenize(source, ref state);
+                var start = state.Position;
+                var position = state.Position;
+                var current = source[state.Position];
+
+                while (position < source.Length &&
+                       char.IsDigit(current) ||
+                       current is '.' or 'e' or '_')
+                {
+                    position++;
+                    current = source[position];
+                }
+
+                Token token;
+                var word = source.Substring(start, position - start).Replace("_", string.Empty);
+
+                if (word.Contains('.'))
+                {
+                    var count = word.Count(x => x == '.');
+
+                    if (count > 1) throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+
+                    token = new Token(TokenKind.FloatLiteral, new TokenPosition(state.Line, state.Column), word);
+                }
+                else
+                {
+                    token = new Token(TokenKind.IntLiteral, new TokenPosition(state.Line, state.Column), word);
+                }
+
+                state.Position = position;
+                state.Column += word.Length;
+
+                yield return token;
                 continue;
             }
 
-            if (_doubleQuoteTokenizer.CanTokenize(source, ref state))
+            // DoubleQuote Tokenizer
+            if (source[state.Position] == '"')
             {
-                yield return _doubleQuoteTokenizer.Tokenize(source, ref state);
+                var start = state.Position;
+                var position = state.Position;
+                var current = source[state.Position];
+                var count = 0;
+
+                while (position < source.Length &&
+                       count < 2)
+                {
+                    if (current == '"') count++;
+                    if (Helper.IsEscape(current)) position++;
+
+                    position++;
+                    current = source[position];
+                }
+
+                var word = source.Substring(start, position - start);
+
+                var token = new Token(TokenKind.StringLiteral, new TokenPosition(state.Line, state.Column), word);
+
+                state.Position = position;
+                state.Column += word.Length;
+
+                yield return token;
                 continue;
             }
 
-            if (_quoteTokenizer.CanTokenize(source, ref state))
+            // Quote Tokenizer
+            if (source[state.Position] == '\'')
             {
-                yield return _quoteTokenizer.Tokenize(source, ref state);
+                var start = state.Position;
+                var position = state.Position;
+                var current = source[state.Position];
+                var count = 0;
+
+                while (position < source.Length &&
+                       count < 2)
+                {
+                    if (current == '\'') count++;
+                    if (Helper.IsEscape(current)) position++;
+
+                    position++;
+                    current = source[position];
+                }
+
+                Token token;
+                var word = source.Substring(start, position - start);
+
+                if (word.Length > 2 && Helper.IsEscape(word[1]))
+                {
+                    if (word is not (@"'\\'" or @"'\n'" or @"'\t'" or @"'\''"))
+                        throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+
+                    token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column),
+                        word);
+                }
+                else if (word.Length != 3)
+                {
+                    throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+                }
+                else
+                {
+                    token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column), word);
+                }
+
+                state.Position = position;
+                state.Column += word.Length;
+
+                yield return token;
                 continue;
             }
 
-            if (_operatorTokenizer.CanTokenize(source, ref state))
+            // Operator Tokenizer
             {
-                yield return _operatorTokenizer.Tokenize(source, ref state);
+                Token token;
+
+                switch (source[state.Position])
+                {
+                    case '+':
+                    {
+                        token = new Token(TokenKind.Plus, new TokenPosition(state.Line, state.Column), "+");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '-':
+                    {
+                        token = new Token(TokenKind.Minus, new TokenPosition(state.Line, state.Column), "-");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '*':
+                    {
+                        token = new Token(TokenKind.Star, new TokenPosition(state.Line, state.Column), "*");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '/':
+                    {
+                        token = new Token(TokenKind.Slash, new TokenPosition(state.Line, state.Column), "/");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '<':
+                    {
+                        if (Helper.Peek(source, state.Position) == '=')
+                        {
+                            token = new Token(TokenKind.LessOrEqualThan, new TokenPosition(state.Line, state.Column),
+                                "<=");
+                            state.Position += 2;
+                            state.Column += 2;
+                            break;
+                        }
+
+                        token = new Token(TokenKind.LessThan, new TokenPosition(state.Line, state.Column), "<");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '>':
+                    {
+                        if (Helper.Peek(source, state.Position) == '=')
+                        {
+                            token = new Token(TokenKind.MoreOrEqualThan, new TokenPosition(state.Line, state.Column),
+                                ">=");
+                            state.Position += 2;
+                            state.Column += 2;
+                            break;
+                        }
+
+                        token = new Token(TokenKind.MoreThan, new TokenPosition(state.Line, state.Column), ">");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '=':
+                    {
+                        if (Helper.Peek(source, state.Position) == '=')
+                        {
+                            token = new Token(TokenKind.EqualsTo, new TokenPosition(state.Line, state.Column), "==");
+                            state.Position += 2;
+                            state.Column += 2;
+                            break;
+                        }
+
+                        token = new Token(TokenKind.Equal, new TokenPosition(state.Line, state.Column), "=");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '!':
+                    {
+                        if (Helper.Peek(source, state.Position) == '=')
+                        {
+                            token = new Token(TokenKind.NotEqualsTo, new TokenPosition(state.Line, state.Column), "!=");
+                            state.Position += 2;
+                            state.Column += 2;
+                            break;
+                        }
+
+                        token = new Token(TokenKind.Not, new TokenPosition(state.Line, state.Column), "!");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case ';':
+                    {
+                        token = new Token(TokenKind.SemiColon, new TokenPosition(state.Line, state.Column), ";");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case ',':
+                    {
+                        token = new Token(TokenKind.Comma, new TokenPosition(state.Line, state.Column), ",");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '(':
+                    {
+                        token = new Token(TokenKind.LeftParenthesis, new TokenPosition(state.Line, state.Column), "(");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case ')':
+                    {
+                        token = new Token(TokenKind.RightParenthesis, new TokenPosition(state.Line, state.Column), ")");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '[':
+                    {
+                        token = new Token(TokenKind.LeftBracket, new TokenPosition(state.Line, state.Column), "[");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case ']':
+                    {
+                        token = new Token(TokenKind.RightBracket, new TokenPosition(state.Line, state.Column), "]");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '{':
+                    {
+                        token = new Token(TokenKind.LeftBrace, new TokenPosition(state.Line, state.Column), "{");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    case '}':
+                    {
+                        token = new Token(TokenKind.RightBrace, new TokenPosition(state.Line, state.Column), "}");
+                        state.Position++;
+                        state.Column++;
+                        break;
+                    }
+                    default:
+                    {
+                        throw new UnknownTokenException(new TokenPosition(state.Line, state.Column),
+                            source[state.Position].ToString());
+                    }
+                }
+
+                yield return token;
                 continue;
             }
         }

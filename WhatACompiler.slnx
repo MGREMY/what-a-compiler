@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Driver/Driver.csproj" />
+    <Project Path="src/WacParser/WacParser.csproj" />
     <Project Path="src\WacLexer\WacLexer.csproj" />
   </Folder>
 </Solution>

@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WacLexer\WacLexer.csproj" />
+      <ProjectReference Include="..\WacParser\WacParser.csproj" />
     </ItemGroup>
 
     <ItemGroup>
