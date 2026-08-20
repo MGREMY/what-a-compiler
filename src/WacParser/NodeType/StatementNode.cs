@@ -1,5 +1,15 @@
+using System.Text.Json.Serialization;
+
 namespace WacParser.NodeType;
 
+[JsonDerivedType(typeof(BlockStatementNode), typeDiscriminator: "BlockStatementNode")]
+[JsonDerivedType(typeof(VariableDeclarationStatementNode), typeDiscriminator: "VariableDeclarationStatementNode")]
+[JsonDerivedType(typeof(AssignmentStatementNode), typeDiscriminator: "AssignmentStatementNode")]
+[JsonDerivedType(typeof(IfStatementNode), typeDiscriminator: "IfStatementNode")]
+[JsonDerivedType(typeof(ElifStatementNode), typeDiscriminator: "ElifStatementNode")]
+[JsonDerivedType(typeof(ElseStatementNode), typeDiscriminator: "ElseStatementNode")]
+[JsonDerivedType(typeof(WhileStatementNode), typeDiscriminator: "WhileStatementNode")]
+[JsonDerivedType(typeof(ReturnStatementNode), typeDiscriminator: "ReturnStatementNode")]
 public abstract class StatementNode : IAstNode
 {
     public AstNodeKind Kind => AstNodeKind.Statement;

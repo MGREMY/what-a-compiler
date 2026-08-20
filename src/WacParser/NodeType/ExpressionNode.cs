@@ -1,5 +1,15 @@
+using System.Text.Json.Serialization;
+
 namespace WacParser.NodeType;
 
+[JsonDerivedType(typeof(BinaryExpression), typeDiscriminator: "BinaryExpression")]
+[JsonDerivedType(typeof(UnaryExpressionNode), typeDiscriminator: "UnaryExpressionNode")]
+[JsonDerivedType(typeof(ArithmeticExpressionNode), typeDiscriminator: "ArithmeticExpressionNode")]
+[JsonDerivedType(typeof(CharLiteralExpressionNode), typeDiscriminator: "CharLiteralExpressionNode")]
+[JsonDerivedType(typeof(FloatLiteralExpressionNode), typeDiscriminator: "FloatLiteralExpressionNode")]
+[JsonDerivedType(typeof(IdExpressionNode), typeDiscriminator: "IdExpressionNode")]
+[JsonDerivedType(typeof(IntLiteralExpressionNode), typeDiscriminator: "IntLiteralExpressionNode")]
+[JsonDerivedType(typeof(StringLiteralExpressionNode), typeDiscriminator: "StringLiteralExpressionNode")]
 public abstract class ExpressionNode : IAstNode
 {
     public AstNodeKind Kind => AstNodeKind.Expression;
