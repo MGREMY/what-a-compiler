@@ -3,6 +3,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Driver.Helper;
 using WacParser;
+using WacParser.NodeType;
 
 namespace Driver;
 
@@ -48,14 +49,28 @@ public class Driver
 [MinColumn, MaxColumn, MemoryDiagnoser]
 public class DriverBenchmark
 {
-    [Benchmark]
-    public int Start()
+    private string SourceCode { get; set; } = null!;
+    private Token[] Tokens { get; set; } = null!;
+    private ProgramNode ProgramAstNode { get; set; } = null!;
+
+    [GlobalSetup]
+    public void Setup()
     {
-        var sourceCode = File.ReadAllText("Resources/CodeSample.wac");
+        SourceCode = File.ReadAllText("Resources/CodeSample.wac");
 
-        var lexer = new Lexer();
-        var tokens = lexer.Tokenize(sourceCode).ToArray();
+        Tokens = new Lexer().Tokenize(SourceCode).ToArray();
+        ProgramAstNode = new Parser().Parse(Tokens);
+    }
 
-        return 0;
+    [Benchmark]
+    public Token[] Lex()
+    {
+        return new Lexer().Tokenize(SourceCode).ToArray();
+    }
+
+    [Benchmark]
+    public ProgramNode Parse()
+    {
+        return new Parser().Parse(Tokens);
     }
 }
