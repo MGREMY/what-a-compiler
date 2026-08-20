@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace WacParser.NodeType;
 
-[JsonDerivedType(typeof(BinaryExpression), typeDiscriminator: "BinaryExpression")]
+[JsonDerivedType(typeof(BinaryExpressionNode), typeDiscriminator: "BinaryExpression")]
 [JsonDerivedType(typeof(UnaryExpressionNode), typeDiscriminator: "UnaryExpressionNode")]
 [JsonDerivedType(typeof(ArithmeticExpressionNode), typeDiscriminator: "ArithmeticExpressionNode")]
 [JsonDerivedType(typeof(CharLiteralExpressionNode), typeDiscriminator: "CharLiteralExpressionNode")]
@@ -16,7 +16,7 @@ public abstract class ExpressionNode : IAstNode
     public int Position { get; set; }
 }
 
-public class BinaryExpression : ExpressionNode
+public class BinaryExpressionNode : ExpressionNode
 {
     public ExpressionNode Left { get; set; } = null!;
     public ExpressionNode Right { get; set; } = null!;

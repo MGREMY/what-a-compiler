@@ -1,6 +1,6 @@
 namespace WacParser;
 
-public struct ParserState
+internal struct ParserState
 {
     public int Position;
 
