@@ -27,18 +27,13 @@ internal static partial class TokenParser
             throw new ParsingException(exceptionMessage, idToken);
         }
 
-        // Need a '=' in 2nd token
+        // If a '=' is present as a second token, create an expression
         if (TryPeekTo(tokens, state.Position, out var operatorToken)
             && operatorToken.Kind is TokenKind.Equal)
         {
             state.Position++;
+            assignmentNode.Expression = ParseExpression(tokens, ref state);
         }
-        else
-        {
-            throw new ParsingException(exceptionMessage, operatorToken);
-        }
-
-        assignmentNode.Expression = ParseExpression(tokens, ref state);
 
         return assignmentNode;
     }

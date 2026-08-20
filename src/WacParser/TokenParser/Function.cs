@@ -80,7 +80,7 @@ internal static partial class TokenParser
                 break;
             }
 
-            functionNode.Parameters.Add(ParseVariable(tokens, ref state));
+            functionNode.Parameters.Add(ParseVariableDeclaration(tokens, ref state));
         }
 
         if (TryPeekTo(tokens, state.Position, out var blockToken)

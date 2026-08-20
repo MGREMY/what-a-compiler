@@ -94,8 +94,6 @@ Recursive descent parser building AST with 12 partial token parser files:
 - `Program`, `Function`, `Statement`, `Expression`, `Assignment`
 - `If`, `While`, `Return`, `VariableDeclaration`, `Else`, `Elif`, `Block`
 
-AST nodes use `[JsonDerivedType]` attributes for polymorphic JSON serialization. Supports:
-
 - Function declarations with parameters
 - Variable declarations with type annotations
 - Assignments, if/elif/else control flow

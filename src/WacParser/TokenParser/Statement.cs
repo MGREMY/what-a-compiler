@@ -23,7 +23,7 @@ internal static partial class TokenParser
             or TokenKind.Char
             or TokenKind.String)
         {
-            statementNode = ParseVariable(tokens, ref state);
+            statementNode = ParseVariableDeclaration(tokens, ref state);
 
             if (!TryPeekTo(tokens, state.Position, out var nextToken)
                 || nextToken.Kind is not TokenKind.SemiColon)
@@ -35,6 +35,11 @@ internal static partial class TokenParser
         if (currentToken.Kind is TokenKind.Id)
         {
             statementNode = ParseAssignment(tokens, ref state);
+
+            if (statementNode is AssignmentStatementNode { Expression: null })
+            {
+                throw new ParsingException(exceptionMessage, currentToken);
+            }
 
             if (!TryPeekTo(tokens, state.Position, out var nextToken)
                 || nextToken.Kind is not TokenKind.SemiColon)

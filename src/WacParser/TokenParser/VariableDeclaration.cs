@@ -6,7 +6,7 @@ namespace WacParser;
 
 internal static partial class TokenParser
 {
-    public static VariableDeclarationStatementNode ParseVariable(Token[] tokens, ref ParserState state)
+    public static VariableDeclarationStatementNode ParseVariableDeclaration(Token[] tokens, ref ParserState state)
     {
         const string exceptionMessage = "Invalid variable declaration";
 
