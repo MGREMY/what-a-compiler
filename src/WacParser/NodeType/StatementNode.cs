@@ -3,7 +3,7 @@ namespace WacParser.NodeType;
 public abstract class StatementNode : IAstNode
 {
     public AstNodeKind Kind => AstNodeKind.Statement;
-    public int Position { get; }
+    public int Position { get; set; }
 }
 
 public class BlockStatementNode : StatementNode
@@ -20,28 +20,34 @@ public class VariableDeclarationStatementNode : StatementNode
 
 public class AssignmentStatementNode : StatementNode
 {
-    public string Name { get; }
-    public ExpressionNode Expression { get; }
+    public string Name { get; set; } = string.Empty;
+    public ExpressionNode? Expression { get; set; } = null;
 }
 
 public class IfStatementNode : StatementNode
 {
-    public ExpressionNode Condition { get; }
-    public StatementNode Statement { get; }
+    public ExpressionNode Condition { get; set; } = null!;
+    public StatementNode Statement { get; set; } = null!;
+}
+
+public class ElifStatementNode : StatementNode
+{
+    public ExpressionNode Condition { get; set; } = null!;
+    public StatementNode Statement { get; set; } = null!;
 }
 
 public class ElseStatementNode : StatementNode
 {
-    public StatementNode Statement { get; }
+    public StatementNode Statement { get; set; } = null!;
 }
 
 public class WhileStatementNode : StatementNode
 {
-    public ExpressionNode Condition { get; }
-    public StatementNode Statement { get; }
+    public ExpressionNode Condition { get; set; } = null!;
+    public StatementNode Statement { get; set; } = null!;
 }
 
 public class ReturnStatementNode : StatementNode
 {
-    public ExpressionNode Expression { get; }
+    public ExpressionNode Expression { get; set; } = null!;
 }

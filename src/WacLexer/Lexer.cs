@@ -106,6 +106,7 @@ public class Lexer
                 var kind = word switch
                 {
                     "if" => TokenKind.If,
+                    "elif" => TokenKind.Elif,
                     "else" => TokenKind.Else,
                     "while" => TokenKind.While,
                     "return" => TokenKind.Return,

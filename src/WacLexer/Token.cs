@@ -4,7 +4,7 @@ namespace WacLexer;
 public enum TokenKind
 {
     Id, // Identifier (function name, variable name)
-    If, Else, While, Return, // Keyword
+    If, Elif, Else, While, Return, // Keyword
     Void, Int, Float, String, Char, // Type
     IntLiteral, FloatLiteral, StringLiteral, CharLiteral, // Literals
     Plus, Minus, Star, Slash, LessThan, MoreThan, LessOrEqualThan, MoreOrEqualThan, EqualsTo, NotEqualsTo, // Operator

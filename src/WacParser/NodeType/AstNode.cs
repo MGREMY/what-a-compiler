@@ -2,7 +2,7 @@ namespace WacParser.NodeType;
 
 public interface IAstNode
 {
-    int Position { get; }
+    int Position { get; set; }
     AstNodeKind Kind { get; }
 }
 

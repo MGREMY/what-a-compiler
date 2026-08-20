@@ -22,7 +22,7 @@ main(        // identifier + parens
     if (result > 100) {        // > and {
         // Nested block
         float z = 1.5e2;       // float with exponent (1.5e2 → detected as FloatLiteral)
-    } else if (result == 42) { // == (ensure you've fixed the _pos bug)
+    } elif (result == 42) { // == (ensure you've fixed the _pos bug)
         c = 'B';
     } else {                   // != if present, or just else
         s = "world";
