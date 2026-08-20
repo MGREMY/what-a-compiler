@@ -107,6 +107,7 @@ public class Lexer
                 {
                     "if" => TokenKind.If,
                     "else" => TokenKind.Else,
+                    "while" => TokenKind.While,
                     "return" => TokenKind.Return,
                     "void" => TokenKind.Void,
                     "int" => TokenKind.Int,
@@ -116,7 +117,7 @@ public class Lexer
                     _ => TokenKind.Id,
                 };
 
-                var token = new Token(kind, new TokenPosition(state.Line, state.Column), word);
+                var token = new Token(kind, new(state.Line, state.Column), word);
 
                 state.Position = position;
                 state.Column += word.Length;
@@ -147,13 +148,13 @@ public class Lexer
                 {
                     var count = word.Count(x => x == '.');
 
-                    if (count > 1) throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+                    if (count > 1) throw new InvalidTokenException(new(state.Line, state.Column), word);
 
-                    token = new Token(TokenKind.FloatLiteral, new TokenPosition(state.Line, state.Column), word);
+                    token = new Token(TokenKind.FloatLiteral, new(state.Line, state.Column), word);
                 }
                 else
                 {
-                    token = new Token(TokenKind.IntLiteral, new TokenPosition(state.Line, state.Column), word);
+                    token = new Token(TokenKind.IntLiteral, new(state.Line, state.Column), word);
                 }
 
                 state.Position = position;
@@ -183,7 +184,7 @@ public class Lexer
 
                 var word = source.Substring(start, position - start);
 
-                var token = new Token(TokenKind.StringLiteral, new TokenPosition(state.Line, state.Column), word);
+                var token = new Token(TokenKind.StringLiteral, new(state.Line, state.Column), word);
 
                 state.Position = position;
                 state.Column += word.Length;
@@ -216,18 +217,17 @@ public class Lexer
                 if (word.Length > 2 && Helper.IsEscape(word[1]))
                 {
                     if (word is not (@"'\\'" or @"'\n'" or @"'\t'" or @"'\''"))
-                        throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+                        throw new InvalidTokenException(new(state.Line, state.Column), word);
 
-                    token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column),
-                        word);
+                    token = new Token(TokenKind.CharLiteral, new(state.Line, state.Column), word);
                 }
                 else if (word.Length != 3)
                 {
-                    throw new InvalidTokenException(new TokenPosition(state.Line, state.Column), word);
+                    throw new InvalidTokenException(new(state.Line, state.Column), word);
                 }
                 else
                 {
-                    token = new Token(TokenKind.CharLiteral, new TokenPosition(state.Line, state.Column), word);
+                    token = new Token(TokenKind.CharLiteral, new(state.Line, state.Column), word);
                 }
 
                 state.Position = position;
@@ -245,28 +245,28 @@ public class Lexer
                 {
                     case '+':
                     {
-                        token = new Token(TokenKind.Plus, new TokenPosition(state.Line, state.Column), "+");
+                        token = new Token(TokenKind.Plus, new(state.Line, state.Column), "+");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case '-':
                     {
-                        token = new Token(TokenKind.Minus, new TokenPosition(state.Line, state.Column), "-");
+                        token = new Token(TokenKind.Minus, new(state.Line, state.Column), "-");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case '*':
                     {
-                        token = new Token(TokenKind.Star, new TokenPosition(state.Line, state.Column), "*");
+                        token = new Token(TokenKind.Star, new(state.Line, state.Column), "*");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case '/':
                     {
-                        token = new Token(TokenKind.Slash, new TokenPosition(state.Line, state.Column), "/");
+                        token = new Token(TokenKind.Slash, new(state.Line, state.Column), "/");
                         state.Position++;
                         state.Column++;
                         break;
@@ -275,14 +275,13 @@ public class Lexer
                     {
                         if (Helper.Peek(source, state.Position) == '=')
                         {
-                            token = new Token(TokenKind.LessOrEqualThan, new TokenPosition(state.Line, state.Column),
-                                "<=");
+                            token = new Token(TokenKind.LessOrEqualThan, new(state.Line, state.Column), "<=");
                             state.Position += 2;
                             state.Column += 2;
                             break;
                         }
 
-                        token = new Token(TokenKind.LessThan, new TokenPosition(state.Line, state.Column), "<");
+                        token = new Token(TokenKind.LessThan, new(state.Line, state.Column), "<");
                         state.Position++;
                         state.Column++;
                         break;
@@ -291,14 +290,13 @@ public class Lexer
                     {
                         if (Helper.Peek(source, state.Position) == '=')
                         {
-                            token = new Token(TokenKind.MoreOrEqualThan, new TokenPosition(state.Line, state.Column),
-                                ">=");
+                            token = new Token(TokenKind.MoreOrEqualThan, new(state.Line, state.Column), ">=");
                             state.Position += 2;
                             state.Column += 2;
                             break;
                         }
 
-                        token = new Token(TokenKind.MoreThan, new TokenPosition(state.Line, state.Column), ">");
+                        token = new Token(TokenKind.MoreThan, new(state.Line, state.Column), ">");
                         state.Position++;
                         state.Column++;
                         break;
@@ -307,13 +305,13 @@ public class Lexer
                     {
                         if (Helper.Peek(source, state.Position) == '=')
                         {
-                            token = new Token(TokenKind.EqualsTo, new TokenPosition(state.Line, state.Column), "==");
+                            token = new Token(TokenKind.EqualsTo, new(state.Line, state.Column), "==");
                             state.Position += 2;
                             state.Column += 2;
                             break;
                         }
 
-                        token = new Token(TokenKind.Equal, new TokenPosition(state.Line, state.Column), "=");
+                        token = new Token(TokenKind.Equal, new(state.Line, state.Column), "=");
                         state.Position++;
                         state.Column++;
                         break;
@@ -322,76 +320,76 @@ public class Lexer
                     {
                         if (Helper.Peek(source, state.Position) == '=')
                         {
-                            token = new Token(TokenKind.NotEqualsTo, new TokenPosition(state.Line, state.Column), "!=");
+                            token = new Token(TokenKind.NotEqualsTo, new(state.Line, state.Column), "!=");
                             state.Position += 2;
                             state.Column += 2;
                             break;
                         }
 
-                        token = new Token(TokenKind.Not, new TokenPosition(state.Line, state.Column), "!");
+                        token = new Token(TokenKind.Not, new(state.Line, state.Column), "!");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case ';':
                     {
-                        token = new Token(TokenKind.SemiColon, new TokenPosition(state.Line, state.Column), ";");
+                        token = new Token(TokenKind.SemiColon, new(state.Line, state.Column), ";");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case ',':
                     {
-                        token = new Token(TokenKind.Comma, new TokenPosition(state.Line, state.Column), ",");
+                        token = new Token(TokenKind.Comma, new(state.Line, state.Column), ",");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case '(':
                     {
-                        token = new Token(TokenKind.LeftParenthesis, new TokenPosition(state.Line, state.Column), "(");
+                        token = new Token(TokenKind.LeftParenthesis, new(state.Line, state.Column), "(");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case ')':
                     {
-                        token = new Token(TokenKind.RightParenthesis, new TokenPosition(state.Line, state.Column), ")");
+                        token = new Token(TokenKind.RightParenthesis, new(state.Line, state.Column), ")");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case '[':
                     {
-                        token = new Token(TokenKind.LeftBracket, new TokenPosition(state.Line, state.Column), "[");
+                        token = new Token(TokenKind.LeftBracket, new(state.Line, state.Column), "[");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case ']':
                     {
-                        token = new Token(TokenKind.RightBracket, new TokenPosition(state.Line, state.Column), "]");
+                        token = new Token(TokenKind.RightBracket, new(state.Line, state.Column), "]");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case '{':
                     {
-                        token = new Token(TokenKind.LeftBrace, new TokenPosition(state.Line, state.Column), "{");
+                        token = new Token(TokenKind.LeftBrace, new(state.Line, state.Column), "{");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     case '}':
                     {
-                        token = new Token(TokenKind.RightBrace, new TokenPosition(state.Line, state.Column), "}");
+                        token = new Token(TokenKind.RightBrace, new(state.Line, state.Column), "}");
                         state.Position++;
                         state.Column++;
                         break;
                     }
                     default:
                     {
-                        throw new UnknownTokenException(new TokenPosition(state.Line, state.Column),
+                        throw new UnknownTokenException(new(state.Line, state.Column),
                             source[state.Position].ToString());
                     }
                 }
@@ -401,6 +399,6 @@ public class Lexer
             }
         }
 
-        yield return new Token(TokenKind.Eof, new TokenPosition(state.Line, state.Column), "EOF");
+        yield return new Token(TokenKind.Eof, new(state.Line, state.Column), "EOF");
     }
 }

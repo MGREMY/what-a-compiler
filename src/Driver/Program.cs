@@ -1,5 +1,8 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Text.Json;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using Driver.Helper;
+using WacParser;
 
 namespace Driver;
 
@@ -29,14 +32,14 @@ public class Driver
     public int Start()
     {
         var sourceCode = File.ReadAllText("Resources/CodeSample.wac");
+
         var lexer = new Lexer();
+        var tokens = lexer.Tokenize(sourceCode).ToArray();
+        FileHelper.CreateAndWriteToFile("out/lexer", JsonSerializer.Serialize(tokens));
 
-        var tokens = lexer.Tokenize(sourceCode);
-
-        foreach (var token in tokens)
-        {
-            Console.WriteLine(token);
-        }
+        var parser = new Parser();
+        var programAstNode = parser.Parse(tokens);
+        FileHelper.CreateAndWriteToFile("out/parser", JsonSerializer.Serialize(programAstNode));
 
         return 0;
     }
@@ -49,9 +52,9 @@ public class DriverBenchmark
     public int Start()
     {
         var sourceCode = File.ReadAllText("Resources/CodeSample.wac");
-        var lexer = new Lexer();
 
-        var tokens = lexer.Tokenize(sourceCode).ToList();
+        var lexer = new Lexer();
+        var tokens = lexer.Tokenize(sourceCode).ToArray();
 
         return 0;
     }

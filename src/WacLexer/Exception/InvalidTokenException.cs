@@ -1,9 +1,10 @@
 namespace WacLexer.Exception;
 
-public class InvalidTokenException : System.Exception
+public sealed class InvalidTokenException : System.Exception
 {
-    public InvalidTokenException(TokenPosition position, string token)
-        : base($"Invalid token (position: {position}, token: {token})")
+    public InvalidTokenException(TokenPosition position, string token) : base("Invalid token")
     {
+        Data.Add("token", token);
+        Data.Add("position", position);
     }
 }

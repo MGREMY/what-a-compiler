@@ -4,7 +4,7 @@ namespace WacLexer;
 public enum TokenKind
 {
     Id, // Identifier (function name, variable name)
-    If, Else, Return, // Keyword
+    If, Else, While, Return, // Keyword
     Void, Int, Float, String, Char, // Type
     IntLiteral, FloatLiteral, StringLiteral, CharLiteral, // Literals
     Plus, Minus, Star, Slash, LessThan, MoreThan, LessOrEqualThan, MoreOrEqualThan, EqualsTo, NotEqualsTo, // Operator
@@ -16,8 +16,8 @@ public enum TokenKind
 
 public struct TokenPosition
 {
-    public readonly int Line;
-    public readonly int Column;
+    public int Line { get; }
+    public int Column { get; }
 
     public TokenPosition(int line, int column)
     {
@@ -31,11 +31,11 @@ public struct TokenPosition
     }
 }
 
-public struct Token
+public record Token
 {
-    public readonly TokenKind Kind;
-    public readonly TokenPosition Position;
-    public readonly string Text;
+    public TokenKind Kind { get; }
+    public TokenPosition Position { get; }
+    public string Text { get; }
 
     public Token(TokenKind kind, TokenPosition position, string text)
     {
