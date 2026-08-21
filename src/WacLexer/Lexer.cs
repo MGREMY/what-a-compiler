@@ -115,6 +115,9 @@ public class Lexer
                     "float" => TokenKind.Float,
                     "string" => TokenKind.String,
                     "char" => TokenKind.Char,
+                    "bool" => TokenKind.Boolean,
+                    // Boolean literal are characters
+                    "true" or "false" => TokenKind.BooleanLiteral,
                     _ => TokenKind.Id,
                 };
 
@@ -145,11 +148,15 @@ public class Lexer
                 Token token;
                 var word = source.Substring(start, position - start).Replace("_", string.Empty);
 
-                if (word.Contains('.'))
+                if (word.Contains('.') || word.Contains('e'))
                 {
-                    var count = word.Count(x => x == '.');
+                    var dotCount = word.Count(x => x == '.');
 
-                    if (count > 1) throw new InvalidTokenException(new(state.Line, state.Column), word);
+                    if (dotCount > 1) throw new InvalidTokenException(new(state.Line, state.Column), word);
+
+                    var eCount = word.Count(x => x == 'e');
+
+                    if (eCount > 1) throw new InvalidTokenException(new(state.Line, state.Column), word);
 
                     token = new Token(TokenKind.FloatLiteral, new(state.Line, state.Column), word);
                 }

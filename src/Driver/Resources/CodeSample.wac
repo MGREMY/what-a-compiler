@@ -9,11 +9,12 @@ main(        // identifier + parens
 {            // opening brace
     
     // Variable declarations
-    int     x             = 42;       // int literal
-    float   y             = 3.14;     // float literal (has '.')
-    char    c             = 'A';      // char literal
-    char    escapedChar   = '\n';     // Escaped literal
-    string  s           = "hello";    // string literal
+    int     x               =   42      ;       // int literal
+    float   y               =   3.14    ;     // float literal (has '.')
+    char    c               =   'A'     ;      // char literal
+    char    escapedChar     =   '\n'    ;     // Escaped literal
+    string  s               =   "hello" ;    // string literal
+    bool    az              =   false   ;
     
     // Arithmetic expression
     int result = x + y * 2 - 10 / 3; // mixed operators
@@ -24,6 +25,7 @@ main(        // identifier + parens
         float z = 1.5e2;       // float with exponent (1.5e2 → detected as FloatLiteral)
     } elif (result == 42) { // == (ensure you've fixed the _pos bug)
         c = 'B';
+        az = true;
     } else {                   // != if present, or just else
         s = "world";
     }

@@ -45,6 +45,13 @@ internal static partial class TokenParser
                 Value = currentToken.Text
             };
 
+        else if (currentToken.Kind is TokenKind.BooleanLiteral)
+            expressionNode = new BooleanLiteralExpressionNode
+            {
+                Position = state.Position,
+                Value = currentToken.Text
+            };
+
         else if (currentToken.Kind is TokenKind.Not)
             expressionNode = new UnaryExpressionNode
             {
@@ -86,7 +93,8 @@ internal static partial class TokenParser
                 };
             }
 
-            else if (nextToken.Kind is TokenKind.Plus
+            else if (nextToken.Kind
+                     is TokenKind.Plus
                      or TokenKind.Minus
                      or TokenKind.Star
                      or TokenKind.Slash)

@@ -7,6 +7,7 @@ namespace WacParser.NodeType;
 [JsonDerivedType(typeof(ArithmeticExpressionNode), typeDiscriminator: "ArithmeticExpressionNode")]
 [JsonDerivedType(typeof(CharLiteralExpressionNode), typeDiscriminator: "CharLiteralExpressionNode")]
 [JsonDerivedType(typeof(FloatLiteralExpressionNode), typeDiscriminator: "FloatLiteralExpressionNode")]
+[JsonDerivedType(typeof(BooleanLiteralExpressionNode), typeDiscriminator: "BooleanLiteralExpressionNode")]
 [JsonDerivedType(typeof(IdExpressionNode), typeDiscriminator: "IdExpressionNode")]
 [JsonDerivedType(typeof(IntLiteralExpressionNode), typeDiscriminator: "IntLiteralExpressionNode")]
 [JsonDerivedType(typeof(StringLiteralExpressionNode), typeDiscriminator: "StringLiteralExpressionNode")]
@@ -52,6 +53,11 @@ public class CharLiteralExpressionNode : ExpressionNode
 }
 
 public class StringLiteralExpressionNode : ExpressionNode
+{
+    public string Value { get; set; } = string.Empty;
+}
+
+public class BooleanLiteralExpressionNode : ExpressionNode
 {
     public string Value { get; set; } = string.Empty;
 }

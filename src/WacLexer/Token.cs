@@ -5,8 +5,8 @@ public enum TokenKind
 {
     Id, // Identifier (function name, variable name)
     If, Elif, Else, While, Return, // Keyword
-    Void, Int, Float, String, Char, // Type
-    IntLiteral, FloatLiteral, StringLiteral, CharLiteral, // Literals
+    Void, Int, Float, String, Char, Boolean, // Type
+    IntLiteral, FloatLiteral, StringLiteral, CharLiteral, BooleanLiteral, // Literals
     Plus, Minus, Star, Slash, LessThan, MoreThan, LessOrEqualThan, MoreOrEqualThan, EqualsTo, NotEqualsTo, // Operator
     Equal, Not, SemiColon, Comma,
     LeftParenthesis, RightParenthesis, LeftBracket, RightBracket, LeftBrace, RightBrace,

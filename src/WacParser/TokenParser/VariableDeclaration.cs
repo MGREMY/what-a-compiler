@@ -21,7 +21,8 @@ internal static partial class TokenParser
                 is TokenKind.Int
                 or TokenKind.Float
                 or TokenKind.String
-                or TokenKind.Char)
+                or TokenKind.Char
+                or TokenKind.Boolean)
         {
             state.Position++;
             variableDeclarationNode.Type = typeToken.Text;
